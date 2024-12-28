@@ -118,6 +118,7 @@ version: '3'
 services:
   unifi-network-monitor:
     image: jaconah/unifi-network-monitor:latest
+    container_name: unifi-network-monitor
     volumes:
       - ./data:/app/data
     env_file:
