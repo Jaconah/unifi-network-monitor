@@ -1,0 +1,13 @@
+# Python
+__pycache__/
+*.py[cod]
+
+# Environment
+.env
+.venv
+env/
+venv/
+
+# Project specific
+data/
+*.json
