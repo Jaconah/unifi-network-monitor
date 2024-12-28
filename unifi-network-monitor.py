@@ -14,17 +14,17 @@ from dotenv import load_dotenv
 load_dotenv()
 
 bot_token = os.getenv('bot_token')
-TARGET_CHANNEL_ID = int(os.getenv('TARGET_CHANNEL_ID'))  # Convert to int since Discord needs it as integer
+target_channel_id = int(os.getenv('target_channel_id'))  # Convert to int since Discord needs it as integer
 
 
 # Unifi
-base_url = os.getenv('UNIFI_URL')
-username = os.getenv('UNIFI_USERNAME')
-password = os.getenv('UNIFI_PASSWORD')
+base_url = os.getenv('unifi_url')
+username = os.getenv('unifi_username')
+password = os.getenv('unifi_password')
 
 # Config
-NUMBER_OF_DAYS = int(os.getenv('NUMBER_OF_DAYS', 15))  # The 15 is a default if not found
-DELAY_BETWEEN_RUNS = int(os.getenv('DELAY_BETWEEN_RUNS', 5))  # The 5 is a default if not found
+number_of_days = int(os.getenv('number_of_days', 15))  # The 15 is a default if not found
+delay_between_runs = int(os.getenv('delay_between_runs', 5))  # The 5 is a default if not found
 verify_ssl = False #Since we access it locally this needs to be set to false. 
 
 
@@ -96,7 +96,7 @@ async def check_client_list():
 
         if ping_needed == True:
             
-            if last_seen_days > NUMBER_OF_DAYS:
+            if last_seen_days > number_of_days:
                 message = (
                     f"```\n"
                     f"An old client has rejoined your network. It was last seen on {last_seen_date} which was {str(last_seen_days)} days ago\n"
@@ -116,7 +116,7 @@ async def check_client_list():
                 f"```"
             )
             #Logic to send the message
-            channel = bot.get_channel(TARGET_CHANNEL_ID)
+            channel = bot.get_channel(target_channel_id)
             if channel:
                 sent_message = await channel.send(message)
                 await add_block_reaction(sent_message)
@@ -135,7 +135,7 @@ async def check_mac(client_mac, client_id):
         except json.JSONDecodeError:
             print(f"Error decoding JSON file {data_file}.")
             message = "An error has occurred while decoding the stored JSON data_file, exiting."
-            channel = bot.get_channel(TARGET_CHANNEL_ID)
+            channel = bot.get_channel(target_channel_id)
             if channel:
                 await channel.send(message)
             exit()
@@ -154,7 +154,7 @@ async def check_mac(client_mac, client_id):
                 json.dump(datas, file, indent=4)
 
             # Determine if a ping is needed
-            if days_difference > NUMBER_OF_DAYS:
+            if days_difference > number_of_days:
                 print("Client has not been seen recently")
                 ping_needed = True
             else:
@@ -250,7 +250,7 @@ async def block_client(client_mac):
         message = "Failed to block client with MAC Adress " + client_mac
 
     #Logic to send the message
-    channel = bot.get_channel(TARGET_CHANNEL_ID)
+    channel = bot.get_channel(target_channel_id)
     if channel:
         sent_message = await channel.send(message)
 
@@ -264,7 +264,7 @@ intents.message_content = True
 
 bot = commands.Bot(command_prefix="!", intents=intents)
 # Background task to check for new clients
-@tasks.loop(minutes=DELAY_BETWEEN_RUNS)
+@tasks.loop(minutes=delay_between_runs)
 async def check_network():
     """Periodically checks UniFi network for new or returning clients."""
     await check_client_list()
@@ -297,7 +297,7 @@ async def on_reaction_add(reaction, user):
         return 
     
     # Only process reactions in target channel
-    if reaction.message.channel.id == TARGET_CHANNEL_ID:
+    if reaction.message.channel.id == target_channel_id:
         print(f"{user.name} reacted with {reaction.emoji}")
         
         # Try to block client if MAC found
@@ -308,7 +308,7 @@ async def on_reaction_add(reaction, user):
 async def on_message(message):
     """Handles message replies - used for renaming clients."""
     # Only process replies to bot messages in target channel
-    if (message.channel.id == TARGET_CHANNEL_ID and 
+    if (message.channel.id == target_channel_id and 
         message.reference and 
         not message.author.bot):
         

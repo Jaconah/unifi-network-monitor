@@ -87,26 +87,26 @@ For security best practices, create a dedicated local user for API access:
 Create a `.env` file with the following variables:
 
 ```env
-BOT_TOKEN=your_discord_bot_token
-TARGET_CHANNEL_ID=your_discord_channel_id
-UNIFI_URL=https://YourControllerIP
-UNIFI_USERNAME=your_unifi_username
-UNIFI_PASSWORD=your_unifi_password
-NUMBER_OF_DAYS=15
-DELAY_BETWEEN_RUNS=5
+bot_token=your_discord_bot_token
+target_channel_id=your_discord_channel_id
+unifi_url=https://YourControllerIP
+unifi_username=your_unifi_username
+unifi_password=your_unifi_password
+number_of_days=15
+delay_between_runs=5
 ```
 
 #### Configuration Details
 
 | Variable | Description | Default | Required |
 |----------|-------------|---------|----------|
-| `BOT_TOKEN` | Discord bot authentication token | - | Yes |
-| `TARGET_CHANNEL_ID` | Discord channel for notifications (Enable Developer Mode in Discord Settings > App Settings > Advanced, then right-click channel and "Copy ID") | - | Yes |
-| `UNIFI_URL` | IP address of your Unifi Controller with https:// prefix | - | Yes |
-| `UNIFI_USERNAME` | Unifi Controller username | - | Yes |
-| `UNIFI_PASSWORD` | Unifi Controller password | - | Yes |
-| `NUMBER_OF_DAYS` | Days threshold for returning devices | 15 | No |
-| `DELAY_BETWEEN_RUNS` | Minutes between network checks | 5 | No |
+| `bot_token` | Discord bot authentication token | - | Yes |
+| `target_channel_id` | Discord channel for notifications (Enable Developer Mode in Discord Settings > App Settings > Advanced, then right-click channel and "Copy ID") | - | Yes |
+| `unifi_url` | IP address of your Unifi Controller with https:// prefix | - | Yes |
+| `unifi_username` | Unifi Controller username | - | Yes |
+| `unifi_password` | Unifi Controller password | - | Yes |
+| `number_of_days` | Days threshold for returning devices | 15 | No |
+| `delay_between_runs` | Minutes between network checks | 5 | No |
 
 ### Deployment Options
 
