@@ -13,7 +13,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-BOT_TOKEN = os.getenv('BOT_TOKEN')
+bot_token = os.getenv('bot_token')
 TARGET_CHANNEL_ID = int(os.getenv('TARGET_CHANNEL_ID'))  # Convert to int since Discord needs it as integer
 
 
@@ -125,16 +125,16 @@ async def check_client_list():
 async def check_mac(client_mac, client_id):
     """Cycle though the locally stored JSON file to compare MAC's to see if this client has associted with the network before."""
     today = datetime.today()
-    if not os.path.exists(DATA_FILE):
-        print(f"File {DATA_FILE} does not exist.")
+    if not os.path.exists(data_file):
+        print(f"File {data_file} does not exist.")
         datas = []
     else:
         try:
-            with open(DATA_FILE, "r") as file:
+            with open(data_file, "r") as file:
                 datas = json.load(file)
         except json.JSONDecodeError:
-            print(f"Error decoding JSON file {DATA_FILE}.")
-            message = "An error has occurred while decoding the stored JSON DATA_FILE, exiting."
+            print(f"Error decoding JSON file {data_file}.")
+            message = "An error has occurred while decoding the stored JSON data_file, exiting."
             channel = bot.get_channel(TARGET_CHANNEL_ID)
             if channel:
                 await channel.send(message)
@@ -150,7 +150,7 @@ async def check_mac(client_mac, client_id):
             # Update last_seen to today if client is seen again
             data["last_seen"] = today.strftime("%Y-%m-%d")
             
-            with open(DATA_FILE, "w") as file:
+            with open(data_file, "w") as file:
                 json.dump(datas, file, indent=4)
 
             # Determine if a ping is needed
@@ -172,7 +172,7 @@ async def check_mac(client_mac, client_id):
     }
     datas.append(new_client)
 
-    with open(DATA_FILE, "w") as file:
+    with open(data_file, "w") as file:
         json.dump(datas, file, indent=4)
 
     return ping_needed, today.strftime("%Y-%m-%d"), 0
@@ -182,7 +182,7 @@ async def rename_client(client_mac, new_name):
     """Looks up the client_mac in the data file to pull the unique Client ID in Unifi and post to the API to rename the client."""
 
     try:
-        with open(DATA_FILE, "r") as file:
+        with open(data_file, "r") as file:
             stored_data = json.load(file)
     except (json.JSONDecodeError, FileNotFoundError) as e:
         print(f"Error reading data file: {e}")
@@ -325,16 +325,16 @@ async def on_message(message):
 #Startup Code
 
 # Setup data file path
-DATA_FILE = "data/StoredMacs.json"
+data_file = "data/stored_macs.json"
 
 # Create data directory if it doesn't exist
 data_dir = Path("data")
 data_dir.mkdir(exist_ok=True)
 
 # Create the JSON file with empty array if it doesn't exist
-if not Path(DATA_FILE).exists():
-    with open(DATA_FILE, "w") as file:
+if not Path(data_file).exists():
+    with open(data_file, "w") as file:
         json.dump([], file)
 
 # Start the bot
-bot.run(BOT_TOKEN)
+bot.run(bot_token)

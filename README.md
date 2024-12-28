@@ -116,8 +116,8 @@ DELAY_BETWEEN_RUNS=5
 ```yaml
 version: '3'
 services:
-  unifi-monitor:
-    build: .
+  unifi-network-monitor:
+    image: jaconah/unifi-network-monitor:latest
     volumes:
       - ./data:/app/data
     env_file:
