@@ -142,13 +142,13 @@ async def check_mac(client_mac, client_id):
     #Determine if the client is old and if so when was it last seen.
     for data in datas:
 
-        if data["Mac"] == client_mac:
-            last_seen_date_str = data["LastSeen"]
+        if data["mac"] == client_mac:
+            last_seen_date_str = data["last_seen"]
             last_seen_date = datetime.strptime(last_seen_date_str, "%Y-%m-%d")
             days_difference = (today - last_seen_date).days
             
-            # Update LastSeen to today if client is seen again
-            data["LastSeen"] = today.strftime("%Y-%m-%d")
+            # Update last_seen to today if client is seen again
+            data["last_seen"] = today.strftime("%Y-%m-%d")
             
             with open(DATA_FILE, "w") as file:
                 json.dump(datas, file, indent=4)
@@ -166,9 +166,9 @@ async def check_mac(client_mac, client_id):
     print("Client is new")
     ping_needed = True
     new_client = {
-        "Mac": client_mac,
-        "LastSeen": today.strftime("%Y-%m-%d"),
-        "ClientID": client_id
+        "mac": client_mac,
+        "last_seen": today.strftime("%Y-%m-%d"),
+        "client_id": client_id
     }
     datas.append(new_client)
 
@@ -191,8 +191,8 @@ async def rename_client(client_mac, new_name):
     # Find the client ID from stored data
     client_id = None
     for entry in stored_data:
-        if entry["Mac"] == client_mac:
-            client_id = entry["ClientID"]
+        if entry["mac"] == client_mac:
+            client_id = entry["client_id"]
             break
 
     if not client_id:
@@ -207,7 +207,7 @@ async def rename_client(client_mac, new_name):
     rename_url = f"{base_url}/proxy/network/api/s/default/rest/user/{client_id}"
     rename_data = {
         "name": new_name,
-        "_id": client_id,
+        "client_id": client_id,
         "mac": client_mac
     }
     
@@ -253,7 +253,6 @@ async def block_client(client_mac):
     channel = bot.get_channel(TARGET_CHANNEL_ID)
     if channel:
         sent_message = await channel.send(message)
-        await add_block_reaction(sent_message)
 
     return block_response.status_code
 
