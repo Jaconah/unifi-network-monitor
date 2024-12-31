@@ -29,7 +29,7 @@ VLAN: Default
 
 | Action | Method | Description |
 |--------|--------|-------------|
-| Rename Device | Reply to notification with new name | Updates device name in Unifi Controller |
+| Rename Device | Reply to notification with new name | Updates device name in Unifi client list |
 | Block Device | React with 🛑 to notification | Blocks device access to network |
 
 ## Prerequisites
